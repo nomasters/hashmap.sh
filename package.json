@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "echo stub"
+    "build": "webpack --mode='production'",
+    "start:dev": "npm run build && ./scripts/static-host"
   },
   "repository": {
     "type": "git",
@@ -16,5 +17,24 @@
   "bugs": {
     "url": "https://github.com/nomasters/hashmap.sh/issues"
   },
-  "homepage": "https://github.com/nomasters/hashmap.sh#readme"
+  "homepage": "https://github.com/nomasters/hashmap.sh#readme",
+  "devDependencies": {
+    "@types/material-ui": "^0.21.5",
+    "@types/react-tap-event-plugin": "0.0.30",
+    "awesome-typescript-loader": "^5.2.1",
+    "copy-webpack-plugin": "^4.5.2",
+    "source-map-loader": "^0.2.4",
+    "typescript": "^3.0.3",
+    "webpack": "^4.19.0",
+    "webpack-cli": "^3.1.0"
+  },
+  "dependencies": {
+    "@material-ui/core": "^3.0.3",
+    "@material-ui/icons": "^3.0.1",
+    "@types/react": "^16.4.14",
+    "@types/react-dom": "^16.0.7",
+    "prop-types": "^15.6.2",
+    "react": "^16.5.1",
+    "react-dom": "^16.5.1"
+  }
 }
