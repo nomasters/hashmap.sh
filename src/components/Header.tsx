@@ -19,6 +19,15 @@ const styles = (theme: Theme) => createStyles({
     fontWeight: 'normal',
     marginTop: 0,
   },
+  primary: {
+    alignSelf: 'center',
+    textAlign: 'center',
+    fontWeight: 'normal',
+    marginTop: 0,
+    fontSize: 24,
+    maxWidth: 700,
+    lineHeight: 1.5,
+  },
 });
 
 interface Props extends WithStyles<typeof styles> {}
@@ -30,6 +39,12 @@ class Header extends React.Component<Props> {
       <div className={classes.root}>
         <img src="../hashmap-logo.svg" alt="hashmap-logo" className={classes.logo} />
         <h1 className={classes.title} >hashmap</h1>
+        <p className={classes.primary}>
+          hashmap server is a light-weight cryptographically signed public key value store inspired by JWT and IPNS.
+        </p>
+        <p className={classes.primary}>
+          This is a playground for interacting with a prototype of hashmap server using the hashmap javascript client.
+        </p>
       </div>
     );
   }
