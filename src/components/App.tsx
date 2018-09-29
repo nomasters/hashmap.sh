@@ -3,6 +3,8 @@ import { withStyles, Theme, WithStyles, createStyles } from '@material-ui/core/s
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import Header from "./Header";
+import Poster from "./Poster";
+import Getter from "./Getter";
 
 const styles = (theme: Theme) => createStyles({
   root: {
@@ -32,12 +34,10 @@ class App extends React.Component<Props> {
             <Header />
           </Grid>
           <Grid item xs={12} sm={6}>
-            post
-            <Paper className={classes.paper}>stuff goes here</Paper>
+            <Poster />
           </Grid>
           <Grid item xs={12} sm={6}>
-            get
-            <Paper className={classes.paper}>stuff goes here</Paper>
+            <Getter />
           </Grid>
         </Grid>
       </div>

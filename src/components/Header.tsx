@@ -40,10 +40,10 @@ class Header extends React.Component<Props> {
         <img src="../hashmap-logo.svg" alt="hashmap-logo" className={classes.logo} />
         <h1 className={classes.title} >hashmap</h1>
         <p className={classes.primary}>
-          hashmap server is a light-weight cryptographically signed public key value store inspired by JWT and IPNS.
+          <a href='/server'>hashmap server</a> is a light-weight cryptographically signed public key value store inspired by <a href='/server'>JWT</a> and <a href='#'>IPNS</a>.
         </p>
         <p className={classes.primary}>
-          This is a playground for interacting with a prototype of hashmap server using the hashmap javascript client.
+          This is a playground for interacting with a prototype of <a href='/server'>hashmap server</a> using the <a href='/server'>hashmap javascript client</a>.
         </p>
       </div>
     );

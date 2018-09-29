@@ -6,7 +6,7 @@ module.exports = {
         filename: "bundle.js",
         path: __dirname + "/dist"
     },
-
+    mode: 'production',
     // Enable sourcemaps for debugging webpack's output.
     devtool: "source-map",
 
@@ -29,5 +29,10 @@ module.exports = {
             { from: './src/index.html', to: __dirname + "/dist" },
             { from: './src/styles.css', to: __dirname + "/dist" },
         ])
-    ]
+    ],
+    node: {
+        fs: 'empty',
+        net: 'empty',
+        tls: 'empty',
+    },
 };

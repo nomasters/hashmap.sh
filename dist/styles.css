@@ -1,4 +1,8 @@
 body {
-	background-color: #F5F5F5;
+	background-color: #F2F2F2;
 	font-family: 'Roboto', sans-serif;
+}
+
+a {
+	color: #3878DE;
 }
