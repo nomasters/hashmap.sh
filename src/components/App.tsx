@@ -5,6 +5,12 @@ import Grid from '@material-ui/core/Grid';
 import Header from "./Header";
 import Poster from "./Poster";
 import Getter from "./Getter";
+import * as hashmap from 'hashmap-client';
+
+// monkey patch for hrtime
+process.hrtime = require('browser-process-hrtime')
+
+hashmap.setServerURI('https://prototype.hashmap.sh')
 
 const styles = (theme: Theme) => createStyles({
   root: {

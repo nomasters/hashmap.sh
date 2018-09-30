@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { withStyles, Theme, WithStyles, createStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
+import Typography from '@material-ui/core/Typography';
 
 const styles = (theme: Theme) => createStyles({
   root: {
@@ -19,7 +20,9 @@ class Getter extends React.Component<Props> {
     const { classes } = this.props;
     return (
       <div className={classes.root}>
-            get
+            <Typography gutterBottom variant="subheading" component="p">
+              Get
+            </Typography>
             <Paper className={classes.paper}>stuff goes here</Paper>
       </div>
     );
