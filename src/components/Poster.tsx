@@ -6,6 +6,10 @@ import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import * as hashmap from 'hashmap-client';
 import Slider from '@material-ui/lab/Slider';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import Snackbar from '@material-ui/core/Snackbar';
+import IconButton from '@material-ui/core/IconButton';
+import CloseIcon from '@material-ui/icons/Close';
 
 const styles = (theme: Theme) => createStyles({
   root: {
@@ -33,6 +37,9 @@ const styles = (theme: Theme) => createStyles({
     textAlign: 'center',
     color: theme.palette.text.secondary,
   },
+  close: {
+    padding: theme.spacing.unit / 2,
+  },
 });
 
   // ttlSeconds correlates to the SliderValue for index
@@ -59,13 +66,21 @@ const ttlReadable = [
 interface Props extends WithStyles<typeof styles> {}
 
 class Poster extends React.Component<Props> {
-  
+  timer = null;
+  componentWillUnmount() {
+    clearTimeout(this.timer);
+  }
+
   state = {
+    loading: false,
+    success: false,
     privateKey: '',
     ttl: ttlSeconds[3],
     ttlSliderValue: 3,
     ttlDisplayValue: ttlReadable[3],
     message: '',
+    open: false,
+    notificationMessage: '',
   };
 
   handleChange = (name: any) => (event: any) => {
@@ -90,26 +105,73 @@ class Poster extends React.Component<Props> {
   };
 
   handlePostSubmit = () => {
-    let opts = {
-      ttl: this.state.ttl
+    if (!this.state.loading) {
+      this.setState(
+        {
+          success: false,
+          loading: true,
+        },
+        () => {
+          let opts = {
+            ttl: this.state.ttl
+          }
+          let message = this.state.message
+          let key = this.state.privateKey
+          let payload:any = new hashmap.Payload()
+          try {
+            payload.generate(key, message, opts)
+          }
+          catch(err) {
+            this.setState({
+              loading: false,
+              success: false,
+              notificationMessage: err.message,
+              open: true,
+            });
+            return       
+          }
+          payload.post()
+          .then(resp => {
+            this.setState({
+              loading: false,
+              success: true,
+              notificationMessage: 'successfully posted to: ' + resp.endpoint,
+              open: true,
+            });
+          })
+          .catch(err => {
+            this.setState({
+              loading: false,
+              success: false,
+              notificationMessage: err,
+              open: true,
+            });
+          })
+          this.timer = setTimeout(() => {
+            if (this.state.loading) {
+              this.setState({
+                loading: false,
+                success: false,
+                open: true,
+                notificationMessage: 'timeout reached, please try again.',
+              });
+            }
+          }, 4000);
+        },
+      );
     }
-    let message = this.state.message
-    let key = this.state.privateKey
-    let payload:any = new hashmap.Payload()
-    payload.generate(key, message, opts)
-    payload.post()
-    .then(resp => {
-      console.log(resp)
-    })
-    .catch(err => {
-      console.log(err)
-    })
   }
 
+  handleClose = () => {
+    this.setState({ open: false });
+  };
+
   render() {
+    const { loading, success } = this.state;
     const { classes } = this.props;
     const { ttlSliderValue } = this.state;
     const { ttlDisplayValue } = this.state;
+
     return (
       <div className={classes.root}>
             <Typography gutterBottom variant="subheading" component="p">
@@ -168,10 +230,36 @@ class Poster extends React.Component<Props> {
               variant="contained" 
               color="primary" 
               className={classes.button}
+              disabled={loading}
               onClick={this.handlePostSubmit}
             >
               Sign and Submit
-            </Button>  
+            </Button>
+            {loading && <CircularProgress size={24} />}
+            <Snackbar
+              anchorOrigin={{
+                vertical: 'bottom',
+                horizontal: 'left',
+              }}
+              open={this.state.open}
+              autoHideDuration={6000}
+              onClose={this.handleClose}
+              ContentProps={{
+                'aria-describedby': 'message-id',
+              }}
+              message={<span id="message-id">{this.state.notificationMessage}</span>}
+              action={[
+                <IconButton
+                  key="close"
+                  aria-label="Close"
+                  color="inherit"
+                  className={classes.close}
+                  onClick={this.handleClose}
+                >
+                  <CloseIcon />
+                </IconButton>,
+              ]}
+            />
       </div>
     );
   }
