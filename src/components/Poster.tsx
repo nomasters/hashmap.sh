@@ -26,6 +26,8 @@ const styles = (theme: Theme) => createStyles({
     flexWrap: 'wrap',
     flexDirection: 'column',
     textAlign: 'left',
+    paddingLeft: 9,
+    paddingRight: 20,
   },
   textField: {
     marginLeft: theme.spacing.unit,
@@ -34,11 +36,14 @@ const styles = (theme: Theme) => createStyles({
   paper: {
     padding: theme.spacing.unit * 2,
     marginBottom: 16,
-    textAlign: 'center',
+    textAlign: 'left',
     color: theme.palette.text.secondary,
   },
   close: {
     padding: theme.spacing.unit / 2,
+  },
+  message: {
+    paddingRight: 36,
   },
 });
 
@@ -143,7 +148,7 @@ class Poster extends React.Component<Props> {
             this.setState({
               loading: false,
               success: false,
-              notificationMessage: err,
+              notificationMessage: err.message,
               open: true,
             });
           })
@@ -218,6 +223,7 @@ class Poster extends React.Component<Props> {
                   multiline
                   rowsMax="6"
                   value={this.state.message}
+                  className={classes.message}
                   onChange={this.handleChange('message')}
                   margin="normal"
                   fullWidth={true}
@@ -245,9 +251,9 @@ class Poster extends React.Component<Props> {
               autoHideDuration={6000}
               onClose={this.handleClose}
               ContentProps={{
-                'aria-describedby': 'message-id',
+                'aria-describedby': 'post-message-id',
               }}
-              message={<span id="message-id">{this.state.notificationMessage}</span>}
+              message={<span id="post-message-id">{this.state.notificationMessage}</span>}
               action={[
                 <IconButton
                   key="close"
