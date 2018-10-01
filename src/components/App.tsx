@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { withStyles, Theme, WithStyles, createStyles } from '@material-ui/core/styles';
-import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import Header from "./Header";
 import Poster from "./Poster";
@@ -18,11 +17,6 @@ const styles = (theme: Theme) => createStyles({
     justifyContent: 'center',
     display: 'flex',
   },
-  paper: {
-    padding: theme.spacing.unit * 2,
-    textAlign: 'center',
-    color: theme.palette.text.secondary,
-  },
   container: {
     maxWidth: 1200,
   }
@@ -35,7 +29,7 @@ class App extends React.Component<Props> {
     const { classes } = this.props;
     return (
       <div className={classes.root}>
-        <Grid container className={classes.container} spacing={16}>
+        <Grid container className={classes.container} spacing={24}>
           <Grid item xs={12}>
             <Header />
           </Grid>

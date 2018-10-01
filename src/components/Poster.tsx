@@ -29,13 +29,22 @@ const styles = (theme: Theme) => createStyles({
     paddingLeft: 9,
     paddingRight: 20,
   },
+  paperHeader: {
+    display: 'flex',
+    flexWrap: 'wrap',
+    flexDirection: 'column',
+    textAlign: 'left',
+    paddingLeft: 9,
+    marginBottom: 24,
+  },
   textField: {
     marginLeft: theme.spacing.unit,
     marginRight: theme.spacing.unit,
   },
   paper: {
     padding: theme.spacing.unit * 2,
-    marginBottom: 16,
+    marginBottom: 24,
+    paddingBottom: 24, 
     textAlign: 'left',
     color: theme.palette.text.secondary,
   },
@@ -44,6 +53,7 @@ const styles = (theme: Theme) => createStyles({
   },
   message: {
     paddingRight: 36,
+    marginLeft: 6,
   },
 });
 
@@ -183,39 +193,58 @@ class Poster extends React.Component<Props> {
               Post
             </Typography>
             <Paper className={classes.paper}>
-                  <Button 
-                    variant="outlined" 
-                    color="primary" 
-                    className={classes.button}
-                    onClick={this.handleKeyGen}
-                  >
-                    Generate Private Key
-                  </Button>
-                  <form className={classes.container} noValidate autoComplete="off">
-                    <TextField
-                      id="outlined-private-key"
-                      label="Private Key"
-                      className={classes.textField}
-                      value={this.state.privateKey}
-                      fullWidth={true}
-                      onChange={this.handleChange('privateKey')}
-                      margin="normal"
-                      variant="outlined"
-                    />
-                  </ form>
+              <div className={classes.paperHeader}>
+                <Typography gutterBottom variant="headline" component="h2">
+                  Configure a Private Key
+                </Typography>                  
+                <Typography gutterBottom variant="subheading" component="h3" color='textSecondary'>
+                  To post to hashmap server, generate or paste a base64 encoded ed25519 private key. This private key is used to sign the submitted data. The public key dirived from this private key is also submitted in the paylod.
+                </Typography>
+              </div>
+              <form className={classes.container} noValidate autoComplete="off">
+                <Button 
+                  variant="outlined" 
+                  color="primary" 
+                  className={classes.button}
+                  onClick={this.handleKeyGen}
+                >Generate Private Key</Button>
+                <TextField
+                  id="outlined-private-key"
+                  label="Private Key"
+                  className={classes.textField}
+                  value={this.state.privateKey}
+                  fullWidth={true}
+                  onChange={this.handleChange('privateKey')}
+                  margin="normal"
+                  variant="outlined"
+                />
+              </ form>
             </Paper>
             <Paper className={classes.paper}>
-                  <div className={classes.slider}>
-                    <Typography gutterBottom variant="headline" component="p">
-                      TTL
-                    </Typography>
-                    <Typography gutterBottom variant="body1" component="p">
-                      {ttlDisplayValue}
-                    </Typography>
-                    <Slider value={ttlSliderValue} min={0} max={6} step={1} onChange={this.handleTTLChange}/>
-                  </div>
+              <div className={classes.paperHeader}>
+                <Typography gutterBottom variant="headline" component="h2">
+                  Set a TTL
+                </Typography>                  
+                <Typography gutterBottom variant="subheading" component="h3" color='textSecondary'>
+                  Key-value pairs on hashmap server are ephemeral. A submitted payload allows a TTL expressed in seconds with a value between 0 and 604800 (1 week). This playground allows values between 15 seconds and 2 hours. 
+                </Typography>
+              </div>
+              <div className={classes.slider}>
+                <Typography gutterBottom variant="subheading" component="p">
+                  ttl: {ttlDisplayValue}
+                </Typography>
+                <Slider value={ttlSliderValue} min={0} max={6} step={1} onChange={this.handleTTLChange}/>
+              </div>
             </Paper>
             <Paper className={classes.paper}>
+              <div className={classes.paperHeader}>
+                <Typography gutterBottom variant="headline" component="h2">
+                  Write a Message
+                </Typography>                  
+                <Typography gutterBottom variant="subheading" component="h3" color='textSecondary'>
+                  Your message is submitted as part of the signed data in a submission payload. Hashmap server restricts the submitted message to be no larger than 512 bytes.
+                </Typography> 
+              </div>
               <form className={classes.container} noValidate autoComplete="off">
                 <TextField
                   id="outlined-multiline-flexible"
