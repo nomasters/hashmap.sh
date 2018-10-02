@@ -72,7 +72,7 @@ class Getter extends React.Component<Props> {
     }
 
     state = {
-        payloadEndpoint: '',
+        payloadEndpoint: this.props.endpoint,
         success: false,
         loading: false,
         endpointResponse: {},
@@ -83,6 +83,15 @@ class Getter extends React.Component<Props> {
         payloadData: {},
     }
 
+    componentDidUpdate(prevProps) {
+      // Typical usage (don't forget to compare props):
+      if (this.props.endpoint !== prevProps.endpoint) {
+        this.setState({
+          payloadEndpoint: this.props.endpoint,
+          success: false,
+        })
+      }
+    }
 
     handleClose = () => {
         this.setState({ open: false });
@@ -98,11 +107,11 @@ class Getter extends React.Component<Props> {
         this.setState({ value });
     };
 
-    handleGetPayload = () => {
-        if (this.props.endpoint && this.state.payloadEndpoint === '') {
-            this.setState({ payloadEndpoint: this.props.endpoint })
-        }
+    urlWithEndpoint = () => {
+      return 'https://prototype.hashmap.sh/' + this.state.payloadEndpoint
+    }
 
+    handleGetPayload = () => {
         if (!this.state.loading) {
           this.setState(
             {
@@ -153,7 +162,7 @@ class Getter extends React.Component<Props> {
     }
 
   render() {
-    const { classes, endpoint } = this.props;
+    const { classes } = this.props;
     const { loading, success, value } = this.state;
 
     return (
@@ -175,7 +184,7 @@ class Getter extends React.Component<Props> {
                       id="outlined-get-payload"
                       label="Payload Endpoint Multihash"
                       className={classes.textField}
-                      value={this.state.payloadEndpoint || endpoint}
+                      value={this.state.payloadEndpoint}
                       fullWidth={true}
                       onChange={this.handleChange('payloadEndpoint')}
                       margin="normal"
@@ -202,7 +211,6 @@ class Getter extends React.Component<Props> {
                       A valid payload contains a json object with keys for data, signatue, and pubkey with each of their values base64 encoded. 
                       Once decoded, data is itself a json object that contains a base64 encoded message as well as the metadata such as timestamp, sigMethod, version, and ttl.
                       Message can be any valid base64 encoded bytes, this isn't restricted to only string output, though string output is assumed for this playground demonstration.
-
                     </Typography>
                 </div>
               <div className={classes.tabs}>
@@ -217,6 +225,9 @@ class Getter extends React.Component<Props> {
                 {value === 1 && <SyntaxHighlighter className={classes.codeDiv} language='json' style={tomorrowNightEighties} customStyle={{ padding: 24 }}>{JSON.stringify(this.state.payloadData, null, 2)}</SyntaxHighlighter>}
                 {value === 2 && <SyntaxHighlighter className={classes.codeDiv} language='json' style={tomorrowNightEighties} customStyle={{ padding: 24 }}>{JSON.stringify(this.state.endpointResponse, null, 2)}</SyntaxHighlighter>}
               </div>
+              <Typography gutterBottom variant="subheading" component="h3" color='textSecondary' style={{ visibility: this.state.success ? 'visible' : 'hidden' }} >
+                View the raw json payload at: <a href={this.urlWithEndpoint()}>{this.urlWithEndpoint()}</a>
+              </Typography>
             </Paper>
             <Snackbar
               anchorOrigin={{

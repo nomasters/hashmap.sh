@@ -149,6 +149,7 @@ class Poster extends React.Component<Props> {
           }
           payload.post()
           .then(resp => {
+            this.props.callbackFromParent('');
             this.setState({
               loading: false,
               success: true,
