@@ -39,13 +39,13 @@ class App extends React.Component<Props> {
     return (
       <div className={classes.root}>
         <Grid container className={classes.container} spacing={24}>
-          <Grid item xs={12}>
+          <Grid item sm={12} xs={12}>
             <Header />
           </Grid>
-          <Grid item sm={12} md={6}>
+          <Grid item xs={12} sm={12} md={6}>
             <Poster callbackFromParent={this.endpointCallback}/>
           </Grid>
-          <Grid item sm={12} md={6}>
+          <Grid item xs={12} sm={12} md={6}>
             <Getter endpoint={this.state.endpoint} />
           </Grid>
         </Grid>

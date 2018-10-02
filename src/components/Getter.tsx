@@ -226,7 +226,7 @@ class Getter extends React.Component<Props> {
                 {value === 2 && <SyntaxHighlighter className={classes.codeDiv} language='json' style={tomorrowNightEighties} customStyle={{ padding: 24 }}>{JSON.stringify(this.state.endpointResponse, null, 2)}</SyntaxHighlighter>}
               </div>
               <Typography gutterBottom variant="subheading" component="h3" color='textSecondary' style={{ visibility: this.state.success ? 'visible' : 'hidden' }} >
-                View the raw json payload at: <a href={this.urlWithEndpoint()}>{this.urlWithEndpoint()}</a>
+                View the raw json payload: <a href={this.urlWithEndpoint()}>here</a>
               </Typography>
             </Paper>
             <Snackbar

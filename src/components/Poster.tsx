@@ -188,10 +188,8 @@ class Poster extends React.Component<Props> {
   };
 
   render() {
-    const { loading, success } = this.state;
+    const { loading, success, ttlSliderValue, ttlDisplayValue } = this.state;
     const { classes } = this.props;
-    const { ttlSliderValue } = this.state;
-    const { ttlDisplayValue } = this.state;
 
     return (
       <div className={classes.root}>
