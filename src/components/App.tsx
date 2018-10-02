@@ -25,6 +25,15 @@ const styles = (theme: Theme) => createStyles({
 interface Props extends WithStyles<typeof styles> {}
 
 class App extends React.Component<Props> {
+
+  state = {
+    endpoint: ''
+  };
+
+  endpointCallback = (endpoint) => {
+    this.setState({ endpoint });
+  };
+
   render() {
     const { classes } = this.props;
     return (
@@ -33,11 +42,11 @@ class App extends React.Component<Props> {
           <Grid item xs={12}>
             <Header />
           </Grid>
-          <Grid item xs={12} sm={6}>
-            <Poster />
+          <Grid item sm={12} md={6}>
+            <Poster callbackFromParent={this.endpointCallback}/>
           </Grid>
-          <Grid item xs={12} sm={6}>
-            <Getter />
+          <Grid item sm={12} md={6}>
+            <Getter endpoint={this.state.endpoint} />
           </Grid>
         </Grid>
       </div>

@@ -5,8 +5,10 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "webpack --mode='production'",
-    "start:dev": "npm run build && ./scripts/static-host"
+    "build:prod": "webpack --mode='production'",
+    "build:dev": "webpack",
+    "start:dev": "npm run build:dev && ./scripts/static-host",
+    "start:prod": "npm run build:prod && ./scripts/static-host"
   },
   "repository": {
     "type": "git",

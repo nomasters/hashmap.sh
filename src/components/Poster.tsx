@@ -78,7 +78,9 @@ const ttlReadable = [
     '2 hours',
   ]
 
-interface Props extends WithStyles<typeof styles> {}
+interface Props extends WithStyles<typeof styles> {
+  callbackFromParent: any
+}
 
 class Poster extends React.Component<Props> {
   timer = null;
@@ -153,6 +155,9 @@ class Poster extends React.Component<Props> {
               notificationMessage: 'successfully posted to: ' + resp.endpoint,
               open: true,
             });
+            if (resp.endpoint) {
+              this.props.callbackFromParent(resp.endpoint);
+            }
           })
           .catch(err => {
             this.setState({
@@ -226,7 +231,7 @@ class Poster extends React.Component<Props> {
                   Set a TTL
                 </Typography>                  
                 <Typography gutterBottom variant="subheading" component="h3" color='textSecondary'>
-                  Key-value pairs on hashmap server are ephemeral. A submitted payload allows a TTL expressed in seconds with a value between 0 and 604800 (1 week). This playground allows values between 15 seconds and 2 hours. 
+                  Key-value pairs on hashmap server are ephemeral. A submitted payload allows a TTL expressed in seconds with a value between 0 and 604800 (one week). This playground allows values between 15 seconds and two hours. 
                 </Typography>
               </div>
               <div className={classes.slider}>

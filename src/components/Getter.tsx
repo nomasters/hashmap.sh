@@ -40,9 +40,18 @@ const styles = (theme: Theme) => createStyles({
     marginLeft: theme.spacing.unit,
     marginRight: theme.spacing.unit,
   },
+  paperHeader: {
+    display: 'flex',
+    flexWrap: 'wrap',
+    flexDirection: 'column',
+    textAlign: 'left',
+    paddingLeft: 9,
+    marginBottom: 24,
+  },
   paper: {
     padding: theme.spacing.unit * 2,
-    marginBottom: 16,
+    marginBottom: 24,
+    paddingBottom: 24, 
     textAlign: 'left',
     color: theme.palette.text.secondary,
   },
@@ -51,7 +60,9 @@ const styles = (theme: Theme) => createStyles({
   },
 });
 
-interface Props extends WithStyles<typeof styles> {}
+interface Props extends WithStyles<typeof styles> {
+    endpoint: string;
+}
 
 class Getter extends React.Component<Props> {
     timer = null;
@@ -72,6 +83,7 @@ class Getter extends React.Component<Props> {
         payloadData: {},
     }
 
+
     handleClose = () => {
         this.setState({ open: false });
     };
@@ -87,6 +99,10 @@ class Getter extends React.Component<Props> {
     };
 
     handleGetPayload = () => {
+        if (this.props.endpoint && this.state.payloadEndpoint === '') {
+            this.setState({ payloadEndpoint: this.props.endpoint })
+        }
+
         if (!this.state.loading) {
           this.setState(
             {
@@ -137,20 +153,29 @@ class Getter extends React.Component<Props> {
     }
 
   render() {
-    const { classes } = this.props;
+    const { classes, endpoint } = this.props;
     const { loading, success, value } = this.state;
+
     return (
       <div className={classes.root}>
             <Typography gutterBottom variant="subheading" component="p">
               Get
             </Typography>
             <Paper className={classes.paper}>
+                <div className={classes.paperHeader}>
+                    <Typography gutterBottom variant="headline" component="h2">
+                      Request a Payload by Multihash
+                    </Typography>                  
+                    <Typography gutterBottom variant="subheading" component="h3" color='textSecondary'>
+                      Valid payload values are stored in hashmap in the same form they are submitted. This allows both the client and the server to analyze the payload for integrity. The key for a payload is the blake2b-256 multihash of its ed25519 public key.
+                    </Typography>
+                </div>
                 <form className={classes.container} noValidate autoComplete="off">
                     <TextField
                       id="outlined-get-payload"
                       label="Payload Endpoint Multihash"
                       className={classes.textField}
-                      value={this.state.payloadEndpoint}
+                      value={this.state.payloadEndpoint || endpoint}
                       fullWidth={true}
                       onChange={this.handleChange('payloadEndpoint')}
                       margin="normal"
@@ -169,6 +194,17 @@ class Getter extends React.Component<Props> {
                 {loading && <CircularProgress size={24} />}
             </Paper>
             <Paper className={classes.paper}>
+                <div className={classes.paperHeader}>
+                    <Typography gutterBottom variant="headline" component="h2">
+                      Inspect the Payload
+                    </Typography>                  
+                    <Typography gutterBottom variant="subheading" component="h3" color='textSecondary'>
+                      A valid payload contains a json object with keys for data, signatue, and pubkey with each of their values base64 encoded. 
+                      Once decoded, data is itself a json object that contains a base64 encoded message as well as the metadata such as timestamp, sigMethod, version, and ttl.
+                      Message can be any valid base64 encoded bytes, this isn't restricted to only string output, though string output is assumed for this playground demonstration.
+
+                    </Typography>
+                </div>
               <div className={classes.tabs}>
                 <AppBar position="static" color="default">
                   <Tabs value={value} onChange={this.handleValueChange}>
