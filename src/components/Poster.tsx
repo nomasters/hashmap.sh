@@ -204,7 +204,7 @@ class Poster extends React.Component<Props> {
                   Configure a Private Key
                 </Typography>                  
                 <Typography gutterBottom variant="subheading" component="h3" color='textSecondary'>
-                  To post to hashmap server, generate or paste a base64 encoded ed25519 private key. This private key is used to sign the submitted data. The public key dirived from this private key is also submitted in the paylod.
+                  To post to hashmap server, generate or paste a base64 encoded ed25519 private key. This private key is used to sign the submitted data. The public key derived from this private key is also submitted in the paylod.
                 </Typography>
               </div>
               <form className={classes.container} noValidate autoComplete="off">
