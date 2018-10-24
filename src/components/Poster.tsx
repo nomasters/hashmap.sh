@@ -1,15 +1,18 @@
 import * as React from 'react';
-import { withStyles, Theme, WithStyles, createStyles } from '@material-ui/core/styles';
-import Paper from '@material-ui/core/Paper';
-import Button from '@material-ui/core/Button';
-import TextField from '@material-ui/core/TextField';
-import Typography from '@material-ui/core/Typography';
 import * as hashmap from 'hashmap-client';
-import Slider from '@material-ui/lab/Slider';
+
+// styles import from material ui
+import { withStyles, Theme, WithStyles, createStyles } from '@material-ui/core/styles';
+import Button from '@material-ui/core/Button';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Snackbar from '@material-ui/core/Snackbar';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
+
+// component imports
+import ConfigureKeyForm from './post/configureKeyForm';
+import SetTTLForm from './post/setTtlForm';
+import WriteMessageForm from './post/writeMessageForm';
 
 const styles = (theme: Theme) => createStyles({
   root: {
@@ -57,27 +60,6 @@ const styles = (theme: Theme) => createStyles({
   },
 });
 
-  // ttlSeconds correlates to the SliderValue for index
-const ttlSeconds = [
-    15, 
-    30, 
-    60, 
-    900, 
-    1800, 
-    3600,
-    7200,
-  ]
-  // ttlReadable correlates to the SliderValue for index
-const ttlReadable = [
-    '15 seconds',
-    '30 seconds',
-    '1 minutes',
-    '15 minutes',
-    '30 minutes',
-    '1 hour',
-    '2 hours',
-  ]
-
 interface Props extends WithStyles<typeof styles> {
   callbackFromParent: any
 }
@@ -92,32 +74,28 @@ class Poster extends React.Component<Props> {
     loading: false,
     success: false,
     privateKey: '',
-    ttl: ttlSeconds[3],
-    ttlSliderValue: 3,
-    ttlDisplayValue: ttlReadable[3],
+    ttl: null,
     message: '',
     open: false,
     notificationMessage: '',
   };
 
-  handleChange = (name: any) => (event: any) => {
+  handleChange = (name: string) => (event: any) => {
     this.setState({
       [name]: event.target.value,
     });
   };
 
-  handleKeyGen = () => {
+  handleKeyGen = ():void => {
     let key = hashmap.genNaClSignPrivKey()
     this.setState({
       privateKey: key,
     }) ;
   };
 
-  handleTTLChange = (event: any, ttlSliderValue: any) => {
+  handleTTLChange = (event: React.ChangeEvent, ttlValue: number) => {
     this.setState({ 
-      ttlSliderValue: ttlSliderValue,
-      ttl: ttlSeconds[ttlSliderValue],
-      ttlDisplayValue: ttlReadable[ttlSliderValue],
+      ttl: ttlValue,
     });
   };
 
@@ -188,117 +166,65 @@ class Poster extends React.Component<Props> {
   };
 
   render() {
-    const { loading, success, ttlSliderValue, ttlDisplayValue } = this.state;
+    const { loading, success, message } = this.state;
     const { classes } = this.props;
 
     return (
       <div className={classes.root}>
-            <Typography gutterBottom variant="subheading" component="p">
-              Post
-            </Typography>
-            <Paper className={classes.paper}>
-              <div className={classes.paperHeader}>
-                <Typography gutterBottom variant="headline" component="h2">
-                  Configure a Private Key
-                </Typography>                  
-                <Typography gutterBottom variant="subheading" component="h3" color='textSecondary'>
-                  To post to hashmap server, generate or paste a base64 encoded ed25519 private key. This private key is used to sign the submitted data. The public key derived from this private key is also submitted in the paylod.
-                </Typography>
-              </div>
-              <form className={classes.container} noValidate autoComplete="off">
-                <Button 
-                  variant="outlined" 
-                  color="primary" 
-                  className={classes.button}
-                  onClick={this.handleKeyGen}
-                >Generate Private Key</Button>
-                <TextField
-                  id="outlined-private-key"
-                  label="Private Key"
-                  className={classes.textField}
-                  value={this.state.privateKey}
-                  fullWidth={true}
-                  onChange={this.handleChange('privateKey')}
-                  margin="normal"
-                  variant="outlined"
-                />
-              </ form>
-            </Paper>
-            <Paper className={classes.paper}>
-              <div className={classes.paperHeader}>
-                <Typography gutterBottom variant="headline" component="h2">
-                  Set a TTL
-                </Typography>                  
-                <Typography gutterBottom variant="subheading" component="h3" color='textSecondary'>
-                  Key-value pairs on hashmap server are ephemeral. A submitted payload allows a TTL expressed in seconds with a value between 0 and 604800 (one week). This playground allows values between 15 seconds and two hours. 
-                </Typography>
-              </div>
-              <div className={classes.slider}>
-                <Typography gutterBottom variant="subheading" component="p">
-                  ttl: {ttlDisplayValue}
-                </Typography>
-                <Slider value={ttlSliderValue} min={0} max={6} step={1} onChange={this.handleTTLChange}/>
-              </div>
-            </Paper>
-            <Paper className={classes.paper}>
-              <div className={classes.paperHeader}>
-                <Typography gutterBottom variant="headline" component="h2">
-                  Write a Message
-                </Typography>                  
-                <Typography gutterBottom variant="subheading" component="h3" color='textSecondary'>
-                  Your message is submitted as part of the signed data in a submission payload. Hashmap server restricts the submitted message to be no larger than 512 bytes.
-                </Typography> 
-              </div>
-              <form className={classes.container} noValidate autoComplete="off">
-                <TextField
-                  id="outlined-multiline-flexible"
-                  label="Message"
-                  multiline
-                  rowsMax="6"
-                  value={this.state.message}
-                  className={classes.message}
-                  onChange={this.handleChange('message')}
-                  margin="normal"
-                  fullWidth={true}
-                  helperText="If message is larger than 512 bytes, it will be rejected"
-                  variant="outlined"
-                />
-              </ form>
-            </Paper>
-            <Button 
-              variant="contained" 
-              color="primary" 
-              className={classes.button}
-              disabled={loading}
-              onClick={this.handlePostSubmit}
+        <ConfigureKeyForm 
+          classes={classes}
+          handleKeyGen={this.handleKeyGen}
+          handleChange={this.handleChange}
+          privateKey={this.state.privateKey}
+        />
+        <SetTTLForm 
+          classes={classes}
+          handleTTLChange={this.handleTTLChange}
+        />
+        <WriteMessageForm 
+          classes={classes}
+          message={message}
+          handleChange={this.handleChange}
+        />         
+        <Button 
+          variant="contained" 
+          color="primary" 
+          className={classes.button}
+          disabled={loading}
+          onClick={this.handlePostSubmit}
+        >
+          Sign and Submit
+        </Button>
+
+        {loading && <CircularProgress size={24} />}
+
+        {/* 
+         **  Notification Message
+        */}
+        <Snackbar
+          anchorOrigin={{
+            vertical: 'bottom',
+            horizontal: 'left',
+          }}
+          open={this.state.open}
+          autoHideDuration={6000}
+          onClose={this.handleClose}
+          ContentProps={{
+            'aria-describedby': 'post-message-id',
+          }}
+          message={<span id="post-message-id">{this.state.notificationMessage}</span>}
+          action={[
+            <IconButton
+              key="close"
+              aria-label="Close"
+              color="inherit"
+              className={classes.close}
+              onClick={this.handleClose}
             >
-              Sign and Submit
-            </Button>
-            {loading && <CircularProgress size={24} />}
-            <Snackbar
-              anchorOrigin={{
-                vertical: 'bottom',
-                horizontal: 'left',
-              }}
-              open={this.state.open}
-              autoHideDuration={6000}
-              onClose={this.handleClose}
-              ContentProps={{
-                'aria-describedby': 'post-message-id',
-              }}
-              message={<span id="post-message-id">{this.state.notificationMessage}</span>}
-              action={[
-                <IconButton
-                  key="close"
-                  aria-label="Close"
-                  color="inherit"
-                  className={classes.close}
-                  onClick={this.handleClose}
-                >
-                  <CloseIcon />
-                </IconButton>,
-              ]}
-            />
+              <CloseIcon />
+            </IconButton>,
+          ]}
+        />
       </div>
     );
   }
